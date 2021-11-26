@@ -15,7 +15,9 @@ export default createGlobalStyle`
     --gray-550: #2D3134;
     --gray-700: #2A2F32;
     --gray-800: #262D31;
+    --gray-850: #1E2428;
     --gray-900: #131C21;
+    --gray-950: #0D1418;
     --blue-100: #8eb2be;
     --blue-600: #085373;
   }
@@ -43,6 +45,7 @@ export default createGlobalStyle`
 
   input {
     font: 400 1rem 'Helvetica', sans-serif;
+    color: var(--white-100);
   }
 
   input:-webkit-autofill,
@@ -51,12 +54,13 @@ export default createGlobalStyle`
   input:-webkit-autofill:active {
     -webkit-box-shadow: 0 0 0 30px white inset !important;
   }
+
   input:-webkit-autofill {
     -webkit-text-fill-color: var(--gray-500) !important;
   }
 
   ::-webkit-scrollbar {
-    width: 10px;
+    width: 6px;
   }
 
   ::-webkit-scrollbar-thumb {
