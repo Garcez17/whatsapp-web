@@ -10,7 +10,8 @@ export function Message({ userMessage = false }: MessageProps) {
     <Container userMessage={userMessage}>
       {!userMessage && <span>Lucas</span>}
       <p>
-        Boa noite minha amigo! <p>21:56 {userMessage && <BsCheck2All />}</p>
+        Boa noite minha amigo!{' '}
+        <span>21:56 {userMessage && <BsCheck2All />}</span>
       </p>
     </Container>
   );

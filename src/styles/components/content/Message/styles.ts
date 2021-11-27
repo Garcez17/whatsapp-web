@@ -29,7 +29,7 @@ export const Container = styled.div<ContainerProps>`
     color: var(--white);
     font-size: 0.875rem;
 
-    p {
+    span {
       color: var(--white-100);
       font-size: 0.6875rem;
       margin-top: 0.5rem;
