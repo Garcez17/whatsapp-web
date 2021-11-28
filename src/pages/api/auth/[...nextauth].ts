@@ -1,5 +1,6 @@
 import NextAuth from 'next-auth';
 import Providers from 'next-auth/providers';
+import { socket } from '../../../service/api';
 
 export default NextAuth({
   providers: [
@@ -11,7 +12,13 @@ export default NextAuth({
   ],
   callbacks: {
     async signIn(user, account, profile) {
-      console.log({ user, account, profile });
+      const { email, image, name } = user;
+
+      socket.emit('start', {
+        email,
+        avatar: image,
+        name,
+      });
 
       return true;
     },

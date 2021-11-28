@@ -16,20 +16,18 @@ import {
   InputBar,
 } from '../../styles/components/content/Messages/styles';
 import { Input } from '../Input';
+import { useChat } from '../../hooks/useChat';
 
 export function Messages() {
+  const { user } = useChat();
+
   return (
     <Container>
       <HeaderMessages>
         <Info>
-          <Image
-            src="/profile.jpeg"
-            alt="Gabriel Garcez"
-            width={40}
-            height={40}
-          />
+          <Image src={user.avatar} alt={user.name} width={40} height={40} />
           <Text>
-            <span>Gabriel Garcez</span>
+            <span>{user.name}</span>
             <p>Online</p>
           </Text>
         </Info>

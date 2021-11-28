@@ -5,10 +5,18 @@ import {
   IconsWrapper,
 } from '../../styles/components/aside/header/styles';
 
-export function Header() {
+type HeaderProps = {
+  user: {
+    name: string;
+    email: string;
+    image: string;
+  };
+};
+
+export function Header({ user }: HeaderProps) {
   return (
     <Container>
-      <Image src="/profile.jpeg" alt="Gabriel Garcez" width={40} height={40} />
+      <Image src={user.image} alt={user.name} width={40} height={40} />
       <IconsWrapper>
         <BsFillChatLeftDotsFill />
         <BsThreeDotsVertical />

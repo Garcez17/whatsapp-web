@@ -4,10 +4,18 @@ import { Header } from './Header';
 import { Notification } from './Notification';
 import { SearchBar } from './SearchBar';
 
-export function Aside() {
+type AsideProps = {
+  user: {
+    name: string;
+    email: string;
+    image: string;
+  };
+};
+
+export function Aside({ user }: AsideProps) {
   return (
     <Container>
-      <Header />
+      <Header user={user} />
       <Notification />
       <SearchBar />
       <Chats />

@@ -1,4 +1,6 @@
 import Image from 'next/image';
+import { User } from '../../contexts/ChatContext';
+import { useChat } from '../../hooks/useChat';
 import {
   Container,
   ChatContent,
@@ -7,13 +9,19 @@ import {
   TitleAndMessage,
 } from '../../styles/components/aside/chat/styles';
 
-export function Chat() {
+export function Chat({ user }: any) {
+  const { loadUser } = useChat();
+
+  function handleOpenChat(usr: User) {
+    loadUser(usr);
+  }
+
   return (
-    <Container>
-      <Image src="/profile.jpeg" alt="Gabriel Garcez" width={50} height={50} />
+    <Container onClick={() => handleOpenChat(user)}>
+      <Image src={user.avatar} alt="Gabriel Garcez" width={50} height={50} />
       <ChatContent>
         <TitleAndMessage>
-          <span>Gabriel Garcez</span>
+          <span>{user.name}</span>
           <p>vsf corno fudido kkkkkkkkkj</p>
         </TitleAndMessage>
         <TimeAndMessages hasMessage>

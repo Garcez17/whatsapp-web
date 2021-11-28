@@ -1,19 +1,14 @@
 import { AppProps } from 'next/app';
-
-import { socket } from '../service/api';
+import { AppProvider } from '../contexts';
 
 import GlobalStyle from '../styles/global';
 
-// socket.on('connect', () =>
-//   console.log('[IO] Connect => A new connection has been established'),
-// );
-
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <>
+    <AppProvider session={pageProps.session}>
       <GlobalStyle />
       <Component {...pageProps} />
-    </>
+    </AppProvider>
   );
 }
 

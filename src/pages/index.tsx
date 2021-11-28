@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/client';
 
 import { AiFillGithub } from 'react-icons/ai';
@@ -15,12 +16,15 @@ import {
   ButtonsContainer,
   Button,
 } from '../styles/pages/Home/styles';
+import { withSSRGuest } from '../utils/withSSRGuest';
 
 export default function Home() {
-  // const router = useRouter();
+  const router = useRouter();
 
   async function handleSingIn() {
     await signIn('github');
+
+    router.push('/chat');
   }
 
   return (
@@ -68,3 +72,9 @@ export default function Home() {
     </Container>
   );
 }
+
+export const getServerSideProps = withSSRGuest(async () => {
+  return {
+    props: {},
+  };
+});
