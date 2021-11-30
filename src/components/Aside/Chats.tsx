@@ -12,19 +12,26 @@ import {
   IconContainer,
 } from '../../styles/components/aside/chats/styles';
 import { User } from '../../contexts/ChatContext';
+import { useUser } from '../../hooks/useUser';
+import { useChat } from '../../hooks/useChat';
 
 export function Chats() {
-  const [chats, setChats] = useState<User[]>([]);
+  const { user } = useUser();
+  const { loadUsers, chats, currentUserChat } = useChat();
 
   useEffect(() => {
     socket.on('new_users', data => {
-      setChats(oldState => [...oldState, data]);
+      if (user.id !== data.id) {
+        loadUsers([...chats, data]);
+      }
     });
 
-    socket.emit('get_users', users => {
-      setChats(users);
+    socket.emit('get_users', (users: User[]) => {
+      const filteredUsers = users.filter(usr => usr.id !== user.id);
+
+      loadUsers(filteredUsers);
     });
-  }, [socket]);
+  }, [socket, currentUserChat]);
 
   return (
     <Container>
@@ -36,8 +43,8 @@ export function Chats() {
           <span>Archived</span>
         </ArchivedContent>
       </ArchivedContainer>
-      {chats.map(user => (
-        <Chat key={user.id} user={user} />
+      {chats.map(usr => (
+        <Chat key={usr.id} user={usr} />
       ))}
     </Container>
   );

@@ -21,34 +21,25 @@ import {
   Content,
   InputBar,
 } from '../../styles/components/content/Messages/styles';
+import { useRoom } from '../../hooks/useRoom';
 
 export function Messages() {
-  const { user } = useChat();
-
-  const [isOnline, setIsOnline] = useState(false);
-
-  useEffect(() => {
-    socket.emit('verify_connection', { id: user.id }, data => {
-      setIsOnline(data);
-    });
-  }, [user]);
-
-  useEffect(() => {
-    socket.on('update_connection', data => {
-      if (user.id === data.id) {
-        setIsOnline(data.is_online);
-      }
-    });
-  }, [socket, user.id]);
+  const { currentUserChat } = useChat();
+  const { messages } = useRoom();
 
   return (
     <Container>
       <HeaderMessages>
         <Info>
-          <Image src={user.avatar} alt={user.name} width={40} height={40} />
+          <Image
+            src={currentUserChat.avatar}
+            alt={currentUserChat.name}
+            width={40}
+            height={40}
+          />
           <Text>
-            <span>{user.name}</span>
-            {isOnline && <p>Online</p>}
+            <span>{currentUserChat.name}</span>
+            {currentUserChat.is_online && <p>Online</p>}
           </Text>
         </Info>
         <IconsWrapper>
@@ -57,13 +48,9 @@ export function Messages() {
         </IconsWrapper>
       </HeaderMessages>
       <Content>
-        <Message />
-        <Message />
-        <Message />
-        <Message userMessage />
-        <Message userMessage />
-        <Message userMessage />
-        <Message />
+        {messages.map(msg => (
+          <Message content={msg} key={msg._id} />
+        ))}
       </Content>
       <InputBar>
         <BsFillEmojiLaughingFill />

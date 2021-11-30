@@ -4,7 +4,7 @@ import { Messages } from './Messages';
 import { WppInfo } from './WppInfo';
 
 export function Content() {
-  const { user } = useChat();
+  const { currentUserChat } = useChat();
 
-  return <Container>{user ? <Messages /> : <WppInfo />}</Container>;
+  return <Container>{currentUserChat ? <Messages /> : <WppInfo />}</Container>;
 }

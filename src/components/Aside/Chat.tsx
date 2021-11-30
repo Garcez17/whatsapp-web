@@ -1,6 +1,10 @@
 import Image from 'next/image';
+import { useEffect } from 'react';
 import { User } from '../../contexts/ChatContext';
+import { Message } from '../../contexts/RoomContext';
 import { useChat } from '../../hooks/useChat';
+import { useRoom } from '../../hooks/useRoom';
+import { socket } from '../../service/api';
 import {
   Container,
   ChatContent,
@@ -11,9 +15,18 @@ import {
 
 export function Chat({ user }: any) {
   const { loadUser } = useChat();
+  const { loadMessages, insertRoomId, messages } = useRoom();
 
   function handleOpenChat(usr: User) {
     loadUser(usr);
+
+    socket.emit('start_chat', { idUser: user._id }, response => {
+      const { room, messages: msgs } = response;
+
+      insertRoomId(room.idChatRoom);
+
+      loadMessages(msgs);
+    });
   }
 
   return (

@@ -7,11 +7,14 @@ export type User = {
   email: string;
   avatar: string;
   socket_id: string;
+  is_online: boolean;
 };
 
 type ChatContextData = {
-  user: User;
+  currentUserChat: User;
+  chats: User[];
   loadUser: (usr: User) => void;
+  loadUsers: (users: User[]) => void;
 };
 
 export const ChatContext = createContext({} as ChatContextData);
@@ -21,14 +24,21 @@ type ChatContextProvider = {
 };
 
 export function ChatContextProvider({ children }: ChatContextProvider) {
-  const [user, setUser] = useState<User>(null);
+  const [currentUserChat, setCurrentUserChat] = useState<User>(null);
+  const [chats, setChats] = useState<User[]>([]);
 
   const loadUser = useCallback((usr: User) => {
-    setUser(usr);
+    setCurrentUserChat(usr);
+  }, []);
+
+  const loadUsers = useCallback((users: User[]) => {
+    setChats(users);
   }, []);
 
   return (
-    <ChatContext.Provider value={{ user, loadUser }}>
+    <ChatContext.Provider
+      value={{ currentUserChat, loadUser, loadUsers, chats }}
+    >
       {children}
     </ChatContext.Provider>
   );

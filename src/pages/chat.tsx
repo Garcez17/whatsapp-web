@@ -8,6 +8,7 @@ import { withSSRAuth } from '../utils/withSSRAuth';
 
 import { Container } from '../styles/pages/Chat/styles';
 import { socket } from '../service/api';
+import { useUser } from '../hooks/useUser';
 
 type ChatProps = {
   user: {
@@ -18,13 +19,17 @@ type ChatProps = {
 };
 
 export default function Chat({ user }: ChatProps) {
+  const { setUserProfile } = useUser();
+
   useEffect(() => {
-    socket.emit('online', user.email);
+    socket.emit('online', user.email, data => {
+      setUserProfile(data);
+    });
   }, []);
 
   return (
     <Container>
-      <Aside user={user} />
+      <Aside />
       <Content />
     </Container>
   );

@@ -3,15 +3,15 @@ import { Container } from '../../styles/components/content/Message/styles';
 
 type MessageProps = {
   userMessage?: boolean;
+  content: any;
 };
 
-export function Message({ userMessage = false }: MessageProps) {
+export function Message({ content, userMessage = false }: MessageProps) {
   return (
     <Container userMessage={userMessage}>
       {!userMessage && <span>Lucas</span>}
       <p>
-        Boa noite minha amigo!{' '}
-        <span>21:56 {userMessage && <BsCheck2All />}</span>
+        {content.text} <span>21:56 {userMessage && <BsCheck2All />}</span>
       </p>
     </Container>
   );

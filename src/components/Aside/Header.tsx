@@ -1,22 +1,20 @@
 import Image from 'next/image';
 import { BsThreeDotsVertical, BsFillChatLeftDotsFill } from 'react-icons/bs';
+import { useUser } from '../../hooks/useUser';
+
 import {
   Container,
   IconsWrapper,
 } from '../../styles/components/aside/header/styles';
 
-type HeaderProps = {
-  user: {
-    name: string;
-    email: string;
-    image: string;
-  };
-};
+export function Header() {
+  const { user } = useUser();
 
-export function Header({ user }: HeaderProps) {
   return (
     <Container>
-      <Image src={user.image} alt={user.name} width={40} height={40} />
+      {user && (
+        <Image src={user.avatar} alt={user.name} width={40} height={40} />
+      )}
       <IconsWrapper>
         <BsFillChatLeftDotsFill />
         <BsThreeDotsVertical />
