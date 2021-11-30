@@ -1,5 +1,6 @@
 import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/client';
+import { useEffect } from 'react';
 import { Aside } from '../components/Aside';
 import { Content } from '../components/Content';
 
@@ -17,6 +18,10 @@ type ChatProps = {
 };
 
 export default function Chat({ user }: ChatProps) {
+  useEffect(() => {
+    socket.emit('online', user.email);
+  }, []);
+
   return (
     <Container>
       <Aside user={user} />
@@ -27,8 +32,6 @@ export default function Chat({ user }: ChatProps) {
 
 export const getServerSideProps: GetServerSideProps = withSSRAuth(async ctx => {
   const session = await getSession({ ctx });
-
-  socket.emit('online', session.user.email);
 
   return {
     props: {

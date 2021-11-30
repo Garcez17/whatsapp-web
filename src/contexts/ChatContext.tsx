@@ -6,6 +6,7 @@ export type User = {
   name: string;
   email: string;
   avatar: string;
+  socket_id: string;
 };
 
 type ChatContextData = {
