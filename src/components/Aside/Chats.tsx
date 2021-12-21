@@ -1,6 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { RiInboxArchiveLine } from 'react-icons/ri';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
 
-import { useEffect, useState } from 'react';
+import { User, UserState } from '../../store/modules/user/types';
+import { addContact } from '../../store/modules/contacts/actions';
+
+import { State } from '../../store/modules/rootReducer';
 import { Chat } from './Chat';
 
 import { socket } from '../../service/api';
@@ -11,27 +17,28 @@ import {
   Container,
   IconContainer,
 } from '../../styles/components/aside/chats/styles';
-import { User } from '../../contexts/ChatContext';
-import { useUser } from '../../hooks/useUser';
-import { useChat } from '../../hooks/useChat';
 
 export function Chats() {
-  const { user } = useUser();
-  const { loadUsers, chats, currentUserChat } = useChat();
+  const dispatch = useDispatch();
+
+  const { user } = useSelector<State, UserState>(state => state.user);
+  const contacts = useSelector<State, User[]>(state => state.contacts.contacts);
 
   useEffect(() => {
     socket.on('new_users', data => {
       if (user.id !== data.id) {
-        loadUsers([...chats, data]);
+        dispatch(addContact(data));
       }
     });
 
     socket.emit('get_users', (users: User[]) => {
       const filteredUsers = users.filter(usr => usr.id !== user.id);
 
-      loadUsers(filteredUsers);
+      filteredUsers.forEach(usr => {
+        dispatch(addContact(usr));
+      });
     });
-  }, [socket, currentUserChat]);
+  }, [socket]);
 
   return (
     <Container>
@@ -43,7 +50,7 @@ export function Chats() {
           <span>Archived</span>
         </ArchivedContent>
       </ArchivedContainer>
-      {chats.map(usr => (
+      {contacts.map(usr => (
         <Chat key={usr.id} user={usr} />
       ))}
     </Container>

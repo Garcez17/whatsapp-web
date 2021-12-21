@@ -1,10 +1,12 @@
 import Image from 'next/image';
-import { useEffect } from 'react';
-import { User } from '../../contexts/ChatContext';
-import { Message } from '../../contexts/RoomContext';
-import { useChat } from '../../hooks/useChat';
-import { useRoom } from '../../hooks/useRoom';
+import { useDispatch } from 'react-redux';
 import { socket } from '../../service/api';
+import {
+  loadMessagesFromChat,
+  setRoomId,
+} from '../../store/modules/chat/actions';
+import { setCurrentContact } from '../../store/modules/contacts/actions';
+import { User } from '../../store/modules/user/types';
 import {
   Container,
   ChatContent,
@@ -13,19 +15,22 @@ import {
   TitleAndMessage,
 } from '../../styles/components/aside/chat/styles';
 
-export function Chat({ user }: any) {
-  const { loadUser } = useChat();
-  const { loadMessages, insertRoomId, messages } = useRoom();
+type ChatProps = {
+  user: User;
+};
+
+export function Chat({ user }: ChatProps) {
+  const dispatch = useDispatch();
 
   function handleOpenChat(usr: User) {
-    loadUser(usr);
+    dispatch(setCurrentContact(usr));
 
     socket.emit('start_chat', { idUser: user._id }, response => {
-      const { room, messages: msgs } = response;
+      const { room, messages } = response;
 
-      insertRoomId(room.idChatRoom);
+      dispatch(setRoomId(room.idChatRoom));
 
-      loadMessages(msgs);
+      dispatch(loadMessagesFromChat(messages));
     });
   }
 

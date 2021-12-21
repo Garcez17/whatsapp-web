@@ -1,16 +1,16 @@
-import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { useSelector } from 'react-redux';
 import { BsFillEmojiLaughingFill, BsThreeDotsVertical } from 'react-icons/bs';
 import { AiOutlinePaperClip } from 'react-icons/ai';
 import { IoMdMic } from 'react-icons/io';
 import { FiSearch } from 'react-icons/fi';
 
+import { User } from '../../store/modules/user/types';
+import { State } from '../../store/modules/rootReducer';
+import { Message as MessageType } from '../../store/modules/chat/types';
+
 import { Message } from './Message';
 import { Input } from '../Input';
-
-import { useChat } from '../../hooks/useChat';
-
-import { socket } from '../../service/api';
 
 import {
   Container,
@@ -21,25 +21,29 @@ import {
   Content,
   InputBar,
 } from '../../styles/components/content/Messages/styles';
-import { useRoom } from '../../hooks/useRoom';
 
 export function Messages() {
-  const { currentUserChat } = useChat();
-  const { messages } = useRoom();
+  const currentContact = useSelector<State, User>(
+    state => state.contacts.currentContact,
+  );
+
+  const messages = useSelector<State, MessageType[]>(
+    state => state.chat.messages,
+  );
 
   return (
     <Container>
       <HeaderMessages>
         <Info>
           <Image
-            src={currentUserChat.avatar}
-            alt={currentUserChat.name}
+            src={currentContact.avatar}
+            alt={currentContact.name}
             width={40}
             height={40}
           />
           <Text>
-            <span>{currentUserChat.name}</span>
-            {currentUserChat.is_online && <p>Online</p>}
+            <span>{currentContact.name}</span>
+            {currentContact.is_online && <p>Online</p>}
           </Text>
         </Info>
         <IconsWrapper>
@@ -57,7 +61,6 @@ export function Messages() {
         <AiOutlinePaperClip />
         <Input placeholder="Type a message" />
         <IoMdMic />
-        {/* <input type="text" /> */}
       </InputBar>
     </Container>
   );

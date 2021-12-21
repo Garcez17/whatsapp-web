@@ -1,10 +1,17 @@
-import { useChat } from '../../hooks/useChat';
-import { Container } from '../../styles/components/content/styles';
+import { useSelector } from 'react-redux';
+
+import { State } from '../../store/modules/rootReducer';
+import { User } from '../../store/modules/user/types';
+
 import { Messages } from './Messages';
 import { WppInfo } from './WppInfo';
 
-export function Content() {
-  const { currentUserChat } = useChat();
+import { Container } from '../../styles/components/content/styles';
 
-  return <Container>{currentUserChat ? <Messages /> : <WppInfo />}</Container>;
+export function Content() {
+  const currentContact = useSelector<State, User>(
+    state => state.contacts.currentContact,
+  );
+
+  return <Container>{currentContact ? <Messages /> : <WppInfo />}</Container>;
 }

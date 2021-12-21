@@ -1,9 +1,11 @@
 import { BsCheck2All } from 'react-icons/bs';
+import { Message } from '../../store/modules/chat/types';
+
 import { Container } from '../../styles/components/content/Message/styles';
 
 type MessageProps = {
   userMessage?: boolean;
-  content: any;
+  content: Message;
 };
 
 export function Message({ content, userMessage = false }: MessageProps) {
