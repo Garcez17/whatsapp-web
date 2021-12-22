@@ -55,7 +55,7 @@ export const Container = styled.div<ContainerProps>`
             border-width: 13px 8px 0 10px;
             top: 0;
             position: absolute;
-            left: 92%;
+            right: 0%;
             transform: translateX(50%);
           }
         `
@@ -67,7 +67,7 @@ export const Container = styled.div<ContainerProps>`
             border-width: 15px 6px 0 10px;
             top: 0;
             position: absolute;
-            left: -7%;
+            right: 100%;
             transform: translateX(50%);
           }
         `}

@@ -18,3 +18,12 @@ export function setCurrentContact(user: User) {
     },
   };
 }
+
+export function updateContactStatus(user: User) {
+  return {
+    type: ContactsActionTypes.updateContactStatus,
+    payload: {
+      user,
+    },
+  };
+}

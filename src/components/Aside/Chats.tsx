@@ -23,6 +23,9 @@ export function Chats() {
 
   const { user } = useSelector<State, UserState>(state => state.user);
   const contacts = useSelector<State, User[]>(state => state.contacts.contacts);
+  const currentContact = useSelector<State, User>(
+    state => state.contacts.currentContact,
+  );
 
   useEffect(() => {
     socket.on('new_users', data => {
@@ -38,7 +41,7 @@ export function Chats() {
         dispatch(addContact(usr));
       });
     });
-  }, [socket]);
+  }, [socket, currentContact]);
 
   return (
     <Container>

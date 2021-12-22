@@ -1,5 +1,6 @@
+import { useEffect } from 'react';
 import Image from 'next/image';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { BsFillEmojiLaughingFill, BsThreeDotsVertical } from 'react-icons/bs';
 import { AiOutlinePaperClip } from 'react-icons/ai';
 import { IoMdMic } from 'react-icons/io';
@@ -21,8 +22,14 @@ import {
   Content,
   InputBar,
 } from '../../styles/components/content/Messages/styles';
+import { socket } from '../../service/api';
+import { updateContactStatus } from '../../store/modules/contacts/actions';
 
 export function Messages() {
+  const dispatch = useDispatch();
+
+  const user = useSelector<State, User>(state => state.user.user);
+
   const currentContact = useSelector<State, User>(
     state => state.contacts.currentContact,
   );
@@ -30,6 +37,12 @@ export function Messages() {
   const messages = useSelector<State, MessageType[]>(
     state => state.chat.messages,
   );
+
+  useEffect(() => {
+    socket.on('update_connection', data => {
+      dispatch(updateContactStatus(data));
+    });
+  }, [socket]);
 
   return (
     <Container>
@@ -53,7 +66,11 @@ export function Messages() {
       </HeaderMessages>
       <Content>
         {messages.map(msg => (
-          <Message content={msg} key={msg._id} />
+          <Message
+            content={msg}
+            key={msg._id}
+            userMessage={user.id !== msg.to.id}
+          />
         ))}
       </Content>
       <InputBar>

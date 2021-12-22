@@ -37,6 +37,16 @@ export const contacts: Reducer<ContactsState> = (
         break;
       }
 
+      case ContactsActionTypes.updateContactStatus: {
+        const { user } = action.payload;
+
+        if (draft.currentContact._id === user._id) {
+          draft.currentContact.is_online = user.is_online;
+        }
+
+        break;
+      }
+
       default:
         return draft;
     }
