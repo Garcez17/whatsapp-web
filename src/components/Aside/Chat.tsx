@@ -26,9 +26,9 @@ export function Chat({ user }: ChatProps) {
     dispatch(setCurrentContact(usr));
 
     socket.emit('start_chat', { idUser: user._id }, response => {
-      const { room, messages } = response;
+      const { roomId, messages } = response;
 
-      dispatch(setRoomId(room.idChatRoom));
+      dispatch(setRoomId(roomId));
 
       dispatch(loadMessagesFromChat(messages));
     });

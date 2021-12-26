@@ -1,16 +1,16 @@
+import { InputHTMLAttributes } from 'react';
 import { FiSearch } from 'react-icons/fi';
 import { Container } from '../styles/components/Input/styles';
 
-type InputProps = {
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   hasIcon?: boolean;
-  placeholder?: string;
-};
+}
 
-export function Input({ hasIcon = false, placeholder }: InputProps) {
+export function Input({ hasIcon = false, ...rest }: InputProps) {
   return (
     <Container>
       {hasIcon && <FiSearch />}
-      <input type="text" placeholder={placeholder} />
+      <input type="text" {...rest} />
     </Container>
   );
 }

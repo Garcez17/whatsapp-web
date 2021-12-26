@@ -58,6 +58,7 @@ export const Content = styled.main`
   padding: 1rem 4rem;
   background: var(--gray-950);
   gap: 0.125rem;
+  overflow-y: auto;
 
   display: flex;
   flex-direction: column;
@@ -71,6 +72,23 @@ export const InputBar = styled.footer`
 
   display: flex;
   align-items: center;
+
+  form {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: 1rem;
+
+    button {
+      border: 0;
+      background: transparent;
+
+      svg {
+        width: 2rem;
+        height: 2rem;
+      }
+    }
+  }
 
   svg {
     width: 1.625rem;
