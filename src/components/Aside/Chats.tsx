@@ -4,7 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 
 import { User, UserState } from '../../store/modules/user/types';
-import { addContact } from '../../store/modules/contacts/actions';
+import {
+  addContact,
+  updateContactLastMessage,
+  updateContactNotifications,
+} from '../../store/modules/contacts/actions';
 
 import { State } from '../../store/modules/rootReducer';
 import { Chat } from './Chat';
@@ -17,7 +21,7 @@ import {
   Container,
   IconContainer,
 } from '../../styles/components/aside/chats/styles';
-import { Contact } from '../../store/modules/contacts/types';
+import { ChatContactData, Contact } from '../../store/modules/contacts/types';
 
 export function Chats() {
   const dispatch = useDispatch();
@@ -37,11 +41,13 @@ export function Chats() {
       }
     });
 
-    socket.emit('get_users', (users: User[]) => {
-      const filteredUsers = users.filter(usr => usr.id !== user.id);
+    socket.emit('get_users', user._id, (dataContact: ChatContactData[]) => {
+      dataContact.forEach(data => {
+        const { contact, lastMessage, unreadMessages } = data;
 
-      filteredUsers.forEach(usr => {
-        dispatch(addContact(usr));
+        dispatch(addContact(contact));
+        dispatch(updateContactNotifications(contact, unreadMessages));
+        dispatch(updateContactLastMessage(contact, lastMessage));
       });
     });
   }, [socket, currentContact]);

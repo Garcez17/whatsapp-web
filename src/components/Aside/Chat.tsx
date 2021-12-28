@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { BsCheck2All } from 'react-icons/bs';
 
 import {
   loadMessagesFromChat,
@@ -22,6 +23,7 @@ import {
   MessageCounter,
   TimeAndMessages,
   TitleAndMessage,
+  CheckIcon,
 } from '../../styles/components/aside/chat/styles';
 
 type ChatProps = {
@@ -54,16 +56,26 @@ export function Chat({ user }: ChatProps) {
 
   return (
     <Container onClick={() => handleOpenChat(user)}>
-      <Image src={user.avatar} alt="Gabriel Garcez" width={50} height={50} />
+      <Image src={user.avatar} alt={user.name} width={50} height={50} />
       <ChatContent>
         <TitleAndMessage>
           <span>{user.name}</span>
-          {user.lastMessage?.text && <p>{user.lastMessage.text}</p>}
+          <div>
+            {user.lastMessage?.text && (
+              <>
+                {String(user.lastMessage.to) !== user._id && (
+                  <CheckIcon isRead={user.lastMessage.read} />
+                )}
+
+                <p>{user.lastMessage.text}</p>
+              </>
+            )}
+          </div>
         </TitleAndMessage>
         <TimeAndMessages hasMessage={!!user.unreadMessages}>
           {user.lastMessage?.text && <span>21:08</span>}
 
-          {user.unreadMessages && (
+          {user.unreadMessages > 0 && (
             <MessageCounter>
               <span>{user.unreadMessages}</span>
             </MessageCounter>

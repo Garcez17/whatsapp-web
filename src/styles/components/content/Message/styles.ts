@@ -9,7 +9,7 @@ export const Container = styled.div<ContainerProps>`
     props.userMessage ? 'var(--green-700)' : 'var(--gray-700)'};
   min-width: 5.85rem;
   max-width: 30rem;
-  min-height: 2rem;
+  /* min-height: 2rem; */
   padding: 0.5rem;
   align-self: ${props => (props.userMessage ? 'flex-end' : 'flex-start')};
   position: relative;
@@ -32,15 +32,15 @@ export const Container = styled.div<ContainerProps>`
     span {
       color: var(--white-100);
       font-size: 0.6875rem;
-      margin-top: 0.5rem;
       margin-left: 2rem;
       display: flex;
-      align-items: center;
+      align-items: flex-end;
       gap: 0.2rem;
 
       svg {
         width: 1rem;
         height: 1rem;
+        color: var(--blue-500);
       }
     }
   }

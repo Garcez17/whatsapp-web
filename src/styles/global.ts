@@ -22,6 +22,7 @@ export default createGlobalStyle`
     --gray-950: #0D1418;
     --black: #090E11;
     --blue-100: #8eb2be;
+    --blue-500: #34B7F1;
     --blue-600: #085373;
   }
 

@@ -14,6 +14,12 @@ export interface Contact extends User {
   lastMessage: Message;
 }
 
+export interface ChatContactData {
+  contact: Contact;
+  lastMessage: Message;
+  unreadMessages: number;
+}
+
 export type ContactsState = {
   contacts: Contact[];
   currentContact: Contact;

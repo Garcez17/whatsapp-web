@@ -1,3 +1,4 @@
+import { BsCheck2All } from 'react-icons/bs';
 import styled from 'styled-components';
 
 export const Container = styled.div`
@@ -34,6 +35,7 @@ export const ChatContent = styled.div`
 
 export const TitleAndMessage = styled.div`
   display: flex;
+  flex: 1;
   flex-direction: column;
   justify-content: space-between;
 
@@ -41,10 +43,25 @@ export const TitleAndMessage = styled.div`
     font-size: 1.0625rem;
   }
 
-  p {
+  > div {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     margin-top: 0.25rem;
-    font-size: 0.875rem;
-    color: var(--gray-100);
+    flex: 1;
+
+    /* svg {
+
+    } */
+
+    p {
+      width: 100%;
+      height: 1rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 0.875rem;
+      color: var(--gray-100);
+    }
   }
 `;
 
@@ -81,4 +98,14 @@ export const MessageCounter = styled.div`
     color: var(--gray-900);
     font-weight: bold;
   }
+`;
+
+type CheckIconProps = {
+  isRead: boolean;
+};
+
+export const CheckIcon = styled(BsCheck2All)<CheckIconProps>`
+  width: 1rem;
+  height: 1rem;
+  color: ${props => (props.isRead ? 'var(--blue-500)' : 'var(--gray-100)')};
 `;
