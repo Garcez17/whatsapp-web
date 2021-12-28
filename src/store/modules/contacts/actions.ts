@@ -1,5 +1,6 @@
+import { Message } from '../chat/types';
 import { User } from '../user/types';
-import { ContactsActionTypes } from './types';
+import { Contact, ContactsActionTypes } from './types';
 
 export function addContact(user: User) {
   return {
@@ -24,6 +25,32 @@ export function updateContactStatus(user: User) {
     type: ContactsActionTypes.updateContactStatus,
     payload: {
       user,
+    },
+  };
+}
+
+export function updateContactNotifications(
+  contact: Contact,
+  unreadMessages: number,
+) {
+  return {
+    type: ContactsActionTypes.updateContactNotifications,
+    payload: {
+      contact,
+      unreadMessages,
+    },
+  };
+}
+
+export function updateContactLastMessage(
+  contact: Contact | User,
+  lastMessage: Message,
+) {
+  return {
+    type: ContactsActionTypes.updateContactLastMessage,
+    payload: {
+      contact,
+      lastMessage,
     },
   };
 }

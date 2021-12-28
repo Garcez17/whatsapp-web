@@ -47,6 +47,34 @@ export const contacts: Reducer<ContactsState> = (
         break;
       }
 
+      case ContactsActionTypes.updateContactNotifications: {
+        const { contact, unreadMessages } = action.payload;
+
+        const findContactIndex = state.contacts.findIndex(
+          cnt => cnt._id === contact._id,
+        );
+
+        if (findContactIndex >= 0) {
+          draft.contacts[findContactIndex].unreadMessages = unreadMessages;
+        }
+
+        break;
+      }
+
+      case ContactsActionTypes.updateContactLastMessage: {
+        const { contact, lastMessage } = action.payload;
+
+        const findContactIndex = state.contacts.findIndex(
+          cnt => cnt._id === contact._id,
+        );
+
+        if (findContactIndex >= 0) {
+          draft.contacts[findContactIndex].lastMessage = lastMessage;
+        }
+
+        break;
+      }
+
       default:
         return draft;
     }

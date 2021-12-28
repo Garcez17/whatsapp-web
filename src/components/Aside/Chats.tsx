@@ -17,12 +17,15 @@ import {
   Container,
   IconContainer,
 } from '../../styles/components/aside/chats/styles';
+import { Contact } from '../../store/modules/contacts/types';
 
 export function Chats() {
   const dispatch = useDispatch();
 
   const { user } = useSelector<State, UserState>(state => state.user);
-  const contacts = useSelector<State, User[]>(state => state.contacts.contacts);
+  const contacts = useSelector<State, Contact[]>(
+    state => state.contacts.contacts,
+  );
   const currentContact = useSelector<State, User>(
     state => state.contacts.currentContact,
   );

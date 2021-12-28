@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 import { IoMdMic, IoMdSend } from 'react-icons/io';
 import { FiSearch } from 'react-icons/fi';
-import { Formik, Form, FormikHelpers } from 'formik';
+import { Formik, Form } from 'formik';
 import { AiOutlinePaperClip } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
 import { BsFillEmojiLaughingFill, BsThreeDotsVertical } from 'react-icons/bs';
@@ -10,7 +10,11 @@ import { BsFillEmojiLaughingFill, BsThreeDotsVertical } from 'react-icons/bs';
 import { User } from '../../store/modules/user/types';
 import { State } from '../../store/modules/rootReducer';
 import { Message as MessageType } from '../../store/modules/chat/types';
-import { updateContactStatus } from '../../store/modules/contacts/actions';
+import {
+  updateContactLastMessage,
+  updateContactStatus,
+} from '../../store/modules/contacts/actions';
+import { addMessageToChat } from '../../store/modules/chat/actions';
 
 import { Message } from './Message';
 import { Input } from '../Input';
@@ -26,7 +30,6 @@ import {
   Content,
   InputBar,
 } from '../../styles/components/content/Messages/styles';
-import { addMessageToChat } from '../../store/modules/chat/actions';
 
 export function Messages() {
   const messagesEndRef = useRef(null);
@@ -51,6 +54,10 @@ export function Messages() {
     socket.on('message', data => {
       if (data.message.roomId === roomId) {
         dispatch(addMessageToChat(data.message));
+
+        if (currentContact._id !== data.message.to) {
+          dispatch(updateContactLastMessage(currentContact, data.message));
+        }
       }
     });
   }, [socket, roomId]);

@@ -1,12 +1,21 @@
 import Image from 'next/image';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { socket } from '../../service/api';
+
 import {
   loadMessagesFromChat,
   setRoomId,
 } from '../../store/modules/chat/actions';
-import { setCurrentContact } from '../../store/modules/contacts/actions';
+import {
+  setCurrentContact,
+  updateContactLastMessage,
+  updateContactNotifications,
+} from '../../store/modules/contacts/actions';
+import { Contact } from '../../store/modules/contacts/types';
 import { User } from '../../store/modules/user/types';
+
+import { socket } from '../../service/api';
+
 import {
   Container,
   ChatContent,
@@ -16,7 +25,7 @@ import {
 } from '../../styles/components/aside/chat/styles';
 
 type ChatProps = {
-  user: User;
+  user: Contact;
 };
 
 export function Chat({ user }: ChatProps) {
@@ -34,19 +43,31 @@ export function Chat({ user }: ChatProps) {
     });
   }
 
+  useEffect(() => {
+    socket.on('notification', data => {
+      if (user._id === data.from._id) {
+        dispatch(updateContactNotifications(user, data.unreadMessages));
+        dispatch(updateContactLastMessage(user, data.lastMessage));
+      }
+    });
+  }, [socket]);
+
   return (
     <Container onClick={() => handleOpenChat(user)}>
       <Image src={user.avatar} alt="Gabriel Garcez" width={50} height={50} />
       <ChatContent>
         <TitleAndMessage>
           <span>{user.name}</span>
-          <p>vsf corno fudido kkkkkkkkkj</p>
+          {user.lastMessage?.text && <p>{user.lastMessage.text}</p>}
         </TitleAndMessage>
-        <TimeAndMessages hasMessage>
-          <span>21:08</span>
-          <MessageCounter>
-            <span>86</span>
-          </MessageCounter>
+        <TimeAndMessages hasMessage={!!user.unreadMessages}>
+          {user.lastMessage?.text && <span>21:08</span>}
+
+          {user.unreadMessages && (
+            <MessageCounter>
+              <span>{user.unreadMessages}</span>
+            </MessageCounter>
+          )}
         </TimeAndMessages>
       </ChatContent>
     </Container>
