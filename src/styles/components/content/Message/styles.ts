@@ -36,12 +36,6 @@ export const Container = styled.div<ContainerProps>`
       display: flex;
       align-items: flex-end;
       gap: 0.2rem;
-
-      svg {
-        width: 1rem;
-        height: 1rem;
-        color: var(--blue-500);
-      }
     }
   }
 

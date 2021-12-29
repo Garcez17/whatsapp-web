@@ -4,6 +4,7 @@ export enum ChatActionTypes {
   loadMessagesFromChat = 'LOAD_MESSAGES_FROM_CHAT',
   addMessageToChat = 'ADD_MESSAGE_TO_CHAT',
   setRoomId = 'SET_ROOM_ID',
+  updateUnreadMessages = 'UPDATE_UNREAD_MESSAGES',
 }
 
 export type Message = {

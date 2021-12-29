@@ -42,6 +42,20 @@ export const chat: Reducer<ChatState> = (state = INITAL_STATE, action) => {
         break;
       }
 
+      case ChatActionTypes.updateUnreadMessages: {
+        const { updatedMessages } = action.payload;
+
+        updatedMessages.forEach(msg => {
+          const findMessageIndex = draft.messages.findIndex(
+            message => message._id === msg._id,
+          );
+
+          draft.messages[findMessageIndex] = msg;
+        });
+
+        break;
+      }
+
       default:
         return draft;
     }

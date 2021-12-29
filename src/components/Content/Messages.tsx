@@ -14,7 +14,10 @@ import {
   updateContactLastMessage,
   updateContactStatus,
 } from '../../store/modules/contacts/actions';
-import { addMessageToChat } from '../../store/modules/chat/actions';
+import {
+  addMessageToChat,
+  updateUnreadMessages,
+} from '../../store/modules/chat/actions';
 
 import { Message } from './Message';
 import { Input } from '../Input';
@@ -59,6 +62,17 @@ export function Messages() {
           dispatch(updateContactLastMessage(currentContact, data.message));
         }
       }
+    });
+
+    socket.on('updated_messages', data => {
+      dispatch(
+        updateContactLastMessage(
+          currentContact,
+          data.updatedMessages.slice(-1)[0],
+        ),
+      );
+
+      dispatch(updateUnreadMessages(data.updatedMessages));
     });
   }, [socket, roomId]);
 

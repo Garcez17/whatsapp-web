@@ -1,8 +1,9 @@
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { BsCheck2All } from 'react-icons/bs';
 
+import { format } from 'date-fns';
 import {
   loadMessagesFromChat,
   setRoomId,
@@ -54,6 +55,14 @@ export function Chat({ user }: ChatProps) {
     });
   }, [socket]);
 
+  const hour = useMemo(() => {
+    if (user.lastMessage) {
+      return format(new Date(user.lastMessage.created_at), 'HH:mm');
+    }
+
+    return '';
+  }, [user.lastMessage]);
+
   return (
     <Container onClick={() => handleOpenChat(user)}>
       <Image src={user.avatar} alt={user.name} width={50} height={50} />
@@ -73,7 +82,7 @@ export function Chat({ user }: ChatProps) {
           </div>
         </TitleAndMessage>
         <TimeAndMessages hasMessage={!!user.unreadMessages}>
-          {user.lastMessage?.text && <span>21:08</span>}
+          {user.lastMessage?.text && <span>{hour}</span>}
 
           {user.unreadMessages > 0 && (
             <MessageCounter>

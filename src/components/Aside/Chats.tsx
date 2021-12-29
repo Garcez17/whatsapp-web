@@ -26,7 +26,7 @@ import { ChatContactData, Contact } from '../../store/modules/contacts/types';
 export function Chats() {
   const dispatch = useDispatch();
 
-  const { user } = useSelector<State, UserState>(state => state.user);
+  const user = useSelector<State, User>(state => state.user.user);
   const contacts = useSelector<State, Contact[]>(
     state => state.contacts.contacts,
   );

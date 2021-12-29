@@ -1,10 +1,10 @@
 import { format } from 'date-fns';
 import { memo, useMemo } from 'react';
-import { BsCheck2All } from 'react-icons/bs';
 import { useSelector } from 'react-redux';
 import { Message as MessageType } from '../../store/modules/chat/types';
 import { State } from '../../store/modules/rootReducer';
 import { User } from '../../store/modules/user/types';
+import { CheckIcon } from '../../styles/components/aside/chat/styles';
 
 import { Container } from '../../styles/components/content/Message/styles';
 
@@ -28,7 +28,7 @@ function MessageComponent({ content }: MessageProps) {
       <p>
         {content.text}{' '}
         <span>
-          {hour} {user._id === sender && <BsCheck2All />}
+          {hour} {user._id === sender && <CheckIcon isRead={content.read} />}
         </span>
       </p>
     </Container>

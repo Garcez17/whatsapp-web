@@ -18,6 +18,15 @@ export function addMessageToChat(message: Message) {
   };
 }
 
+export function updateUnreadMessages(updatedMessages: Message[]) {
+  return {
+    type: ChatActionTypes.updateUnreadMessages,
+    payload: {
+      updatedMessages,
+    },
+  };
+}
+
 export function setRoomId(room_id: string) {
   return {
     type: ChatActionTypes.setRoomId,
