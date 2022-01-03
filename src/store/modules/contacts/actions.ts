@@ -43,13 +43,13 @@ export function updateContactNotifications(
 }
 
 export function updateContactLastMessage(
-  contact: Contact | User,
+  contact_id: string,
   lastMessage: Message,
 ) {
   return {
     type: ContactsActionTypes.updateContactLastMessage,
     payload: {
-      contact,
+      contact_id,
       lastMessage,
     },
   };

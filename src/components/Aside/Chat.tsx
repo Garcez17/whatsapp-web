@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import { useEffect, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { BsCheck2All } from 'react-icons/bs';
 
 import { format } from 'date-fns';
 import {
@@ -50,7 +49,7 @@ export function Chat({ user }: ChatProps) {
     socket.on('notification', data => {
       if (user._id === data.from._id) {
         dispatch(updateContactNotifications(user, data.unreadMessages));
-        dispatch(updateContactLastMessage(user, data.lastMessage));
+        dispatch(updateContactLastMessage(user._id, data.lastMessage));
       }
     });
   }, [socket]);

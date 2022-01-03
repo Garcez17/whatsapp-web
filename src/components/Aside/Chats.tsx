@@ -3,7 +3,7 @@ import { RiInboxArchiveLine } from 'react-icons/ri';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 
-import { User, UserState } from '../../store/modules/user/types';
+import { User } from '../../store/modules/user/types';
 import {
   addContact,
   updateContactLastMessage,
@@ -47,7 +47,7 @@ export function Chats() {
 
         dispatch(addContact(contact));
         dispatch(updateContactNotifications(contact, unreadMessages));
-        dispatch(updateContactLastMessage(contact, lastMessage));
+        dispatch(updateContactLastMessage(contact._id, lastMessage));
       });
     });
   }, [socket, currentContact]);

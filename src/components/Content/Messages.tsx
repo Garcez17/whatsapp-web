@@ -55,22 +55,19 @@ export function Messages() {
     });
 
     socket.on('message', data => {
-      if (data.message.roomId === roomId) {
+      if (data.message.roomId === roomId && user._id === data.message.to) {
         dispatch(addMessageToChat(data.message));
 
         if (currentContact._id !== data.message.to) {
-          dispatch(updateContactLastMessage(currentContact, data.message));
+          dispatch(updateContactLastMessage(currentContact._id, data.message));
         }
       }
     });
 
     socket.on('updated_messages', data => {
-      dispatch(
-        updateContactLastMessage(
-          currentContact,
-          data.updatedMessages.slice(-1)[0],
-        ),
-      );
+      const lastMessage = data.updatedMessages.slice(-1)[0];
+
+      dispatch(updateContactLastMessage(data.contact._id, lastMessage));
 
       dispatch(updateUnreadMessages(data.updatedMessages));
     });

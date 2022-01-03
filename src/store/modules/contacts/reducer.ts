@@ -62,10 +62,10 @@ export const contacts: Reducer<ContactsState> = (
       }
 
       case ContactsActionTypes.updateContactLastMessage: {
-        const { contact, lastMessage } = action.payload;
+        const { contact_id, lastMessage } = action.payload;
 
         const findContactIndex = state.contacts.findIndex(
-          cnt => cnt._id === contact._id,
+          cnt => cnt._id === contact_id,
         );
 
         if (findContactIndex >= 0) {
