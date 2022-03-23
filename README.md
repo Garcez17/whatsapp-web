@@ -51,8 +51,8 @@ Feito utilizando tecnologias como Socket.io, Next, Redux, Styled Components e Mo
 ## Como executar
 
 ```
-$ git clone https://github.com/Garcez17/Portfolio
-$ cd Porfolio
+$ git clone https://github.com/Garcez17/whatsapp-web
+$ cd whatsapp-web
 $ yarn
 $ yarn dev
 ```
