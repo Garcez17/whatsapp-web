@@ -1,34 +1,62 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<h1 align="center">
+  Whatsapp Web Clone
+</h1>
 
-## Getting Started
+<p align="center">
+  <img alt="Portfolio - Gabriel Garcez" src=".github/wpp_chat.png" width="100%">
+</p>
 
-First, run the development server:
+<p align="center">
+  <a href="https://portfolio-garcez17.vercel.app/">Acessar site</a>
+</p>
 
-```bash
-npm run dev
-# or
-yarn dev
+## Sobre o Projeto
+
+Clone totalmente funcional do Whatsapp web, contendo features como envio e recebimento de mensagens, confirmação de leitura, notificações e verificação de usuário online.
+
+Feito utilizando tecnologias como Socket.io, Next, Redux, Styled Components e MongoDB.
+
+## Funcionalidades
+
+- [x] Login social com Github.
+
+- [x] Envio e recebimento de mensagens.
+
+- [x] Notificações de recebimento de mensagem.
+
+- [x] Confirmação de leitura.
+
+- [x] Usuário online.
+
+## Próximas features
+
+- [ ] Layout responsivo.
+
+- [ ] Login social com Google, Discord, Instagram.
+
+- [ ] Correção de bugs de usuário online e confirmação de leitura em chats já abertos.
+
+- [ ] Filtro de contatos.
+
+## Feito com:
+- [ReactJS](https://github.com/facebook/react) - Biblioteca Javascript para construção de interfaces.
+- [Next.js](https://github.com/vercel/next.js) - Framework React JS.
+- [Styled Components](https://styled-components.com/) - Biblioteca de estilização.
+- [Typescript](https://github.com/microsoft/TypeScript) - Supertset para Javascript.
+- [React-modal](https://github.com/reactjs/react-modal) - Biblioteca para construção de modal.
+- [Redux](https://redux.js.org/) - Biblioteca de gerenciamento de estado.
+- [MongoDB](https://www.mongodb.com/) - Banco de dados não relacional.
+- [Socket.IO](https://socket.io/) - Biblioteca JavaScript para aplicações web em tempo real.
+
+## Como executar
+
+```
+$ git clone https://github.com/Garcez17/Portfolio
+$ cd Porfolio
+$ yarn
+$ yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Licença
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Esse projeto está sob a licença MIT. Veja o arquivo [LICENSE](https://github.com/Garcez17/Portfolio/blob/main/LICENSE) para mais detalhes.
