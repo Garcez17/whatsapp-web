@@ -42,12 +42,14 @@ export function Chat({ user }: ChatProps) {
       dispatch(setRoomId(roomId));
 
       dispatch(loadMessagesFromChat(messages));
+      dispatch(updateContactNotifications(user, 0));
     });
   }
 
   useEffect(() => {
     socket.on('notification', data => {
       if (user._id === data.from._id) {
+        console.log('notification ==>', data.unreadMessages)
         dispatch(updateContactNotifications(user, data.unreadMessages));
         dispatch(updateContactLastMessage(user._id, data.lastMessage));
       }

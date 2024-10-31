@@ -12,6 +12,7 @@ import { State } from '../../store/modules/rootReducer';
 import { Message as MessageType } from '../../store/modules/chat/types';
 import {
   updateContactLastMessage,
+  updateContactNotifications,
   updateContactStatus,
 } from '../../store/modules/contacts/actions';
 import {
@@ -33,6 +34,7 @@ import {
   Content,
   InputBar,
 } from '../../styles/components/content/Messages/styles';
+import { Contact } from '../../store/modules/contacts/types';
 
 export function Messages() {
   const messagesEndRef = useRef(null);
@@ -41,7 +43,7 @@ export function Messages() {
   const user = useSelector<State, User>(state => state.user.user);
   const roomId = useSelector<State, string>(state => state.chat.roomId);
 
-  const currentContact = useSelector<State, User>(
+  const currentContact = useSelector<State, Contact>(
     state => state.contacts.currentContact,
   );
 
@@ -54,15 +56,23 @@ export function Messages() {
       dispatch(updateContactStatus(data));
     });
 
-    socket.on('message', data => {
-      if (data.message.roomId === roomId && user._id === data.message.to) {
-        dispatch(addMessageToChat(data.message));
+    if (roomId) {
+      socket.on('message', data => {
+        if (data.message.roomId === roomId) {
+          dispatch(addMessageToChat(data.message));
 
-        if (currentContact._id !== data.message.to) {
-          dispatch(updateContactLastMessage(currentContact._id, data.message));
+          if (currentContact._id !== data.message.to) {
+            dispatch(updateContactLastMessage(currentContact._id, data.message));
+          }
+
+          if (data.message.to !== user._id) {
+            socket.emit('read_messages', { idUser: data?.userLogged?._id }, () => {
+              dispatch(updateContactNotifications(currentContact, 0));
+            })
+          }
         }
-      }
-    });
+      });
+    }
 
     socket.on('updated_messages', data => {
       const lastMessage = data.updatedMessages.slice(-1)[0];
