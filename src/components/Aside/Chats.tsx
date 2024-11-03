@@ -22,6 +22,12 @@ import {
   IconContainer,
 } from '../../styles/components/aside/chats/styles';
 import { ChatContactData, Contact } from '../../store/modules/contacts/types';
+import { Group } from '../../store/modules/groups/types';
+import {
+  addGroup,
+  updateGroupLastMessage,
+} from '../../store/modules/groups/actions';
+import { Group as GroupComponent } from './Group';
 
 export function Chats() {
   const dispatch = useDispatch();
@@ -30,6 +36,7 @@ export function Chats() {
   const contacts = useSelector<State, Contact[]>(
     state => state.contacts.contacts,
   );
+  const groups = useSelector<State, Group[]>(state => state.groups.groups);
   const currentContact = useSelector<State, User>(
     state => state.contacts.currentContact,
   );
@@ -50,6 +57,20 @@ export function Chats() {
         dispatch(updateContactLastMessage(contact._id, lastMessage));
       });
     });
+    socket.emit('get_groups', user._id, (dataGroups: any[]) => {
+      dataGroups.forEach(data => {
+        const { group, lastMessage, unreadMessages } = data;
+
+        dispatch(addGroup(group));
+        if (lastMessage)
+          dispatch(updateGroupLastMessage(group._id, lastMessage));
+      });
+    });
+
+    socket.on('new_group', data => {
+      const { room } = data;
+      dispatch(addGroup(room));
+    });
   }, [socket, currentContact]);
 
   return (
@@ -64,6 +85,9 @@ export function Chats() {
       </ArchivedContainer>
       {contacts.map(usr => (
         <Chat key={usr.id} user={usr} />
+      ))}
+      {groups.map(group => (
+        <GroupComponent key={group.idChatRoom} group={group} />
       ))}
     </Container>
   );

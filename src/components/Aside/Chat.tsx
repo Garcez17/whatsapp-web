@@ -25,6 +25,7 @@ import {
   TitleAndMessage,
   CheckIcon,
 } from '../../styles/components/aside/chat/styles';
+import { setCurrentGroup } from '../../store/modules/groups/actions';
 
 type ChatProps = {
   user: Contact;
@@ -35,6 +36,7 @@ export function Chat({ user }: ChatProps) {
 
   function handleOpenChat(usr: User) {
     dispatch(setCurrentContact(usr));
+    dispatch(setCurrentGroup(null));
 
     socket.emit('start_chat', { idUser: user._id }, response => {
       const { roomId, messages } = response;
@@ -48,10 +50,11 @@ export function Chat({ user }: ChatProps) {
 
   useEffect(() => {
     socket.on('notification', data => {
-      if (user._id === data.from._id) {
-        console.log('notification ==>', data.unreadMessages)
-        dispatch(updateContactNotifications(user, data.unreadMessages));
-        dispatch(updateContactLastMessage(user._id, data.lastMessage));
+      if (data?.room?.isPrivate) {
+        if (user._id === data.from._id) {
+          dispatch(updateContactNotifications(user, data.unreadMessages));
+          dispatch(updateContactLastMessage(user._id, data.lastMessage));
+        }
       }
     });
   }, [socket]);

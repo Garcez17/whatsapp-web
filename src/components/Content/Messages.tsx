@@ -35,6 +35,8 @@ import {
   InputBar,
 } from '../../styles/components/content/Messages/styles';
 import { Contact } from '../../store/modules/contacts/types';
+import { Group } from '../../store/modules/groups/types';
+import { updateGroupLastMessage } from '../../store/modules/groups/actions';
 
 export function Messages() {
   const messagesEndRef = useRef(null);
@@ -47,13 +49,19 @@ export function Messages() {
     state => state.contacts.currentContact,
   );
 
+  const currentGroup = useSelector<State, Group>(
+    state => state.groups.currentGroup,
+  );
+
   const messages = useSelector<State, MessageType[]>(
     state => state.chat.messages,
   );
 
   useEffect(() => {
     socket.on('update_connection', data => {
-      dispatch(updateContactStatus(data));
+      if (currentContact) {
+        dispatch(updateContactStatus(data));
+      }
     });
 
     if (roomId) {
@@ -61,15 +69,25 @@ export function Messages() {
         if (data.message.roomId === roomId) {
           dispatch(addMessageToChat(data.message));
 
-          if (currentContact._id !== data.message.to) {
-            dispatch(updateContactLastMessage(currentContact._id, data.message));
+          if (currentContact?._id !== data.message.to) {
+            dispatch(
+              updateContactLastMessage(currentContact?._id, data.message),
+            );
           }
 
-          if (data.message.to !== user._id) {
-            socket.emit('read_messages', { idUser: data?.userLogged?._id }, () => {
-              dispatch(updateContactNotifications(currentContact, 0));
-            })
+          if (currentGroup) {
+            updateGroupLastMessage(currentGroup?._id, data.message);
           }
+
+          // if (data.message.to !== user._id) {
+          //   socket.emit(
+          //     'read_messages',
+          //     { idUser: data?.userLogged?._id },
+          //     () => {
+          //       dispatch(updateContactNotifications(currentContact, 0));
+          //     },
+          //   );
+          // }
         }
       });
     }
@@ -103,15 +121,26 @@ export function Messages() {
     <Container>
       <HeaderMessages>
         <Info>
-          <Image
-            src={currentContact.avatar}
-            alt={currentContact.name}
-            width={40}
-            height={40}
-          />
+          {currentContact && (
+            <Image
+              src={currentContact.avatar}
+              alt={currentContact.name}
+              width={40}
+              height={40}
+            />
+          )}
           <Text>
-            <span>{currentContact.name}</span>
-            {currentContact.is_online && <p>Online</p>}
+            {currentGroup ? (
+              <>
+                <span>{currentGroup.name}</span>
+                <p>{currentGroup.idUsers.map(user => user.name).join(', ')}</p>
+              </>
+            ) : (
+              <>
+                <span>{currentContact.name}</span>
+                {currentContact.is_online && <p>Online</p>}
+              </>
+            )}
           </Text>
         </Info>
         <IconsWrapper>
@@ -131,7 +160,13 @@ export function Messages() {
         <Formik
           initialValues={{ message: '' }}
           onSubmit={(values, { setSubmitting, resetForm }) => {
-            handleSubmit(values.message);
+            const message = values.message.trim();
+            if (!message) {
+              resetForm();
+              return;
+            }
+
+            handleSubmit(message);
             resetForm();
             setSubmitting(false);
           }}

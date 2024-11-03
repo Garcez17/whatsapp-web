@@ -7,11 +7,20 @@ import { Messages } from './Messages';
 import { WppInfo } from './WppInfo';
 
 import { Container } from '../../styles/components/content/styles';
+import { Group } from '../../store/modules/groups/types';
 
 export function Content() {
   const currentContact = useSelector<State, User>(
     state => state.contacts.currentContact,
   );
 
-  return <Container>{currentContact ? <Messages /> : <WppInfo />}</Container>;
+  const currentGroup = useSelector<State, Group>(
+    state => state.groups.currentGroup,
+  );
+
+  return (
+    <Container>
+      {currentContact || currentGroup ? <Messages /> : <WppInfo />}
+    </Container>
+  );
 }

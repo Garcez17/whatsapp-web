@@ -5,6 +5,16 @@ type ContainerProps = {
 };
 
 export const Container = styled.div<ContainerProps>`
+  align-self: ${props => (props.userMessage ? 'flex-end' : 'flex-start')};
+  display: flex;
+  gap: 16px;
+
+  img {
+    border-radius: 50%;
+  }
+`;
+
+export const MsgWrapper = styled.div<ContainerProps>`
   background: ${props =>
     props.userMessage ? 'var(--green-700)' : 'var(--gray-700)'};
   min-width: 5.85rem;
@@ -21,7 +31,7 @@ export const Container = styled.div<ContainerProps>`
 
   > span {
     font-size: 0.75rem;
-    color: var(--green-700);
+    color: var(--blue-500);
   }
 
   > p {
