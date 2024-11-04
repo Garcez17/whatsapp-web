@@ -6,13 +6,14 @@ export enum GroupsActionTypes {
   setCurrentGroupChat = 'SET_CURRENT_GROUP_CHAT',
   updateGroupNotifications = 'UPDATE_GROUP_NOTIFICATIONS',
   updateGroupLastMessage = 'UPDATE_GROUP_LAST_MESSAGE',
+  updateGroup = 'UPDATE_GROUP',
 }
 
 export type Group = {
   _id: string;
   idChatRoom: string;
   idUsers: User[];
-  idAdmin: User;
+  idAdmin: string;
   idBanned: User[];
   idUsersJoinedAt: Map<string, Date>;
   idUsersLastMessage: Map<string, Date>;

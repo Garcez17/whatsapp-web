@@ -1,12 +1,14 @@
 import Image from 'next/image';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { IoMdMic, IoMdSend } from 'react-icons/io';
 import { FiSearch } from 'react-icons/fi';
 import { Formik, Form } from 'formik';
 import { AiOutlinePaperClip } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
 import { BsFillEmojiLaughingFill, BsThreeDotsVertical } from 'react-icons/bs';
+import Modal from 'react-modal';
 
+import { IoArrowBackSharp } from 'react-icons/io5';
 import { User } from '../../store/modules/user/types';
 import { State } from '../../store/modules/rootReducer';
 import { Message as MessageType } from '../../store/modules/chat/types';
@@ -44,6 +46,7 @@ export function Messages() {
 
   const user = useSelector<State, User>(state => state.user.user);
   const roomId = useSelector<State, string>(state => state.chat.roomId);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const currentContact = useSelector<State, Contact>(
     state => state.contacts.currentContact,
@@ -57,6 +60,18 @@ export function Messages() {
     state => state.chat.messages,
   );
 
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const isBannedOrKicked = currentGroup?.idUsers.find(
+    usr => usr._id === user._id,
+  );
+
   useEffect(() => {
     socket.on('update_connection', data => {
       if (currentContact) {
@@ -67,27 +82,19 @@ export function Messages() {
     if (roomId) {
       socket.on('message', data => {
         if (data.message.roomId === roomId) {
-          dispatch(addMessageToChat(data.message));
+          if (currentContact || (currentGroup && isBannedOrKicked)) {
+            dispatch(addMessageToChat(data.message));
 
-          if (currentContact?._id !== data.message.to) {
-            dispatch(
-              updateContactLastMessage(currentContact?._id, data.message),
-            );
+            if (currentContact?._id !== data.message.to) {
+              dispatch(
+                updateContactLastMessage(currentContact?._id, data.message),
+              );
+            }
+
+            if (currentGroup) {
+              updateGroupLastMessage(currentGroup?._id, data.message);
+            }
           }
-
-          if (currentGroup) {
-            updateGroupLastMessage(currentGroup?._id, data.message);
-          }
-
-          // if (data.message.to !== user._id) {
-          //   socket.emit(
-          //     'read_messages',
-          //     { idUser: data?.userLogged?._id },
-          //     () => {
-          //       dispatch(updateContactNotifications(currentContact, 0));
-          //     },
-          //   );
-          // }
         }
       });
     }
@@ -100,6 +107,17 @@ export function Messages() {
       dispatch(updateUnreadMessages(data.updatedMessages));
     });
   }, [socket, roomId]);
+
+  const handleExitGroup = () => {
+    socket.emit('kick_user', {
+      roomId: currentGroup.idChatRoom,
+      userId: user._id,
+      adminId: currentGroup.idAdmin,
+      userSockedId: user.socket_id,
+      exit: true,
+    });
+    handleCloseModal();
+  };
 
   const handleSubmit = (message: string) => {
     const data = {
@@ -119,6 +137,86 @@ export function Messages() {
 
   return (
     <Container>
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={handleCloseModal}
+        contentLabel="Options Modal"
+        style={{
+          content: {
+            backgroundColor: '#2a2f32',
+            width: '500px',
+            height: 'fit-content',
+            margin: 'auto',
+            borderRadius: '8px',
+            padding: '20px',
+            border: 'none',
+          },
+          overlay: {
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+          },
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            marginBottom: '16px',
+          }}
+        >
+          <button
+            type="button"
+            onClick={handleCloseModal}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: '#e9edef',
+              marginRight: '10px',
+            }}
+          >
+            <IoArrowBackSharp size={24} />
+          </button>
+          <h2 style={{ color: '#e9edef' }}>Deseja sair do grupo?</h2>
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            marginTop: '20px',
+          }}
+        >
+          <button
+            type="button"
+            onClick={handleCloseModal}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: '#00a884',
+              fontWeight: 'bold',
+            }}
+          >
+            Cancelar
+          </button>
+          <div>
+            <button
+              type="button"
+              onClick={handleExitGroup}
+              style={{
+                backgroundColor: '#00a884',
+                color: '#ffffff',
+                padding: '10px 20px',
+                borderRadius: '8px',
+                border: 'none',
+                cursor: 'pointer',
+                marginLeft: '10px',
+              }}
+            >
+              Sair
+            </button>
+          </div>
+        </div>
+      </Modal>
       <HeaderMessages>
         <Info>
           {currentContact && (
@@ -145,7 +243,10 @@ export function Messages() {
         </Info>
         <IconsWrapper>
           <FiSearch />
-          <BsThreeDotsVertical />
+          <BsThreeDotsVertical
+            onClick={handleOpenModal}
+            style={{ cursor: 'pointer' }}
+          />
         </IconsWrapper>
       </HeaderMessages>
       <Content>
@@ -154,46 +255,50 @@ export function Messages() {
         ))}
         <div ref={messagesEndRef} />
       </Content>
-      <InputBar>
-        <BsFillEmojiLaughingFill />
-        <AiOutlinePaperClip />
-        <Formik
-          initialValues={{ message: '' }}
-          onSubmit={(values, { setSubmitting, resetForm }) => {
-            const message = values.message.trim();
-            if (!message) {
-              resetForm();
-              return;
-            }
+      {isBannedOrKicked || !currentGroup ? (
+        <InputBar>
+          <BsFillEmojiLaughingFill />
+          <AiOutlinePaperClip />
+          <Formik
+            initialValues={{ message: '' }}
+            onSubmit={(values, { setSubmitting, resetForm }) => {
+              const message = values.message.trim();
+              if (!message) {
+                resetForm();
+                return;
+              }
 
-            handleSubmit(message);
-            resetForm();
-            setSubmitting(false);
-          }}
-        >
-          {({ isSubmitting, values, handleChange, handleBlur }) => (
-            <Form>
-              <Input
-                placeholder="Type a message"
-                name="message"
-                autoComplete="off"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.message}
-              />
-              {values.message ? (
-                <button type="submit" disabled={isSubmitting}>
-                  <IoMdSend />
-                </button>
-              ) : (
-                <button type="button">
-                  <IoMdMic />
-                </button>
-              )}
-            </Form>
-          )}
-        </Formik>
-      </InputBar>
+              handleSubmit(message);
+              resetForm();
+              setSubmitting(false);
+            }}
+          >
+            {({ isSubmitting, values, handleChange, handleBlur }) => (
+              <Form>
+                <Input
+                  placeholder="Type a message"
+                  name="message"
+                  autoComplete="off"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.message}
+                />
+                {values.message ? (
+                  <button type="submit" disabled={isSubmitting}>
+                    <IoMdSend />
+                  </button>
+                ) : (
+                  <button type="button">
+                    <IoMdMic />
+                  </button>
+                )}
+              </Form>
+            )}
+          </Formik>
+        </InputBar>
+      ) : (
+        <p>Você não esta mais nesse grupo</p>
+      )}
     </Container>
   );
 }

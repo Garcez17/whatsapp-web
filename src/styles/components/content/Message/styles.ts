@@ -4,10 +4,13 @@ type ContainerProps = {
   userMessage: boolean;
 };
 
-export const Container = styled.div<ContainerProps>`
+export const Container = styled.button<ContainerProps>`
   align-self: ${props => (props.userMessage ? 'flex-end' : 'flex-start')};
   display: flex;
   gap: 16px;
+  background: transparent;
+  border: 0;
+  text-align: left;
 
   img {
     border-radius: 50%;

@@ -21,6 +21,11 @@ export const groups: Reducer<GroupsState> = (state = INITAL_STATE, action) => {
 
         if (!findEqualGroup) {
           draft.groups.push(group);
+        } else {
+          const findEqualGroupIndex = state.groups.findIndex(
+            room => room._id === group._id,
+          );
+          draft.groups[findEqualGroupIndex].idUsers = group.idUsers;
         }
 
         break;
@@ -57,6 +62,20 @@ export const groups: Reducer<GroupsState> = (state = INITAL_STATE, action) => {
 
         if (findGroupIndex >= 0) {
           draft.groups[findGroupIndex].lastMessage = lastMessage;
+        }
+
+        break;
+      }
+
+      case GroupsActionTypes.updateGroup: {
+        const { group_id, group } = action.payload;
+
+        const findGroupIndex = state.groups.findIndex(
+          group => group._id === group_id,
+        );
+
+        if (findGroupIndex >= 0) {
+          draft.groups[findGroupIndex] = group;
         }
 
         break;

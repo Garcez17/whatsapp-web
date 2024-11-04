@@ -20,6 +20,16 @@ export function updateGroupLastMessage(group_id: string, lastMessage: Message) {
   };
 }
 
+export function updateGroup(group_id: string, group: Group) {
+  return {
+    type: GroupsActionTypes.updateGroup,
+    payload: {
+      group_id,
+      group,
+    },
+  };
+}
+
 export function setCurrentGroup(group: Group) {
   return {
     type: GroupsActionTypes.setCurrentGroupChat,
