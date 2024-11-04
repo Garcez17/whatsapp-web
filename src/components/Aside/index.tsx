@@ -32,27 +32,20 @@ export function Aside() {
     socket.on('user_joined', res => {
       const { lastMessage, room } = res;
 
-      console.log('user_joined', { lastMessage, room });
-
       dispatch(addGroup(room));
       dispatch(setCurrentGroup(room));
     });
     socket.on('user_banned_notification', res => {
-      const { roomId, bannedUserId, room } = res;
+      const { kickedUser, room, exit } = res;
 
-      const findGroup = groups.find(group => group.idChatRoom === roomId);
+      alert(`${kickedUser?.name} foi banido do grupo ${room?.name}`);
 
-      const findUserBanned = findGroup.idUsers.find(
-        user => user._id === bannedUserId,
-      );
-
-      alert(`${findUserBanned?.name} foi banido do grupo ${findGroup?.name}`);
-      dispatch(updateGroup(roomId, room));
-      if (currentGroup?._id) dispatch(setCurrentGroup(room));
+      dispatch(addGroup(room));
+      dispatch(setCurrentGroup(room));
     });
 
     socket.on('user_kicked_notification', res => {
-      const { roomId, kickedUser, room, userLoggedId, exit } = res;
+      const { kickedUser, room, exit } = res;
 
       alert(
         `${kickedUser?.name} ${exit ? 'saiu' : 'foi expulso'} do grupo ${

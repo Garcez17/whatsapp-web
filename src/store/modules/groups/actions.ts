@@ -20,6 +20,15 @@ export function updateGroupLastMessage(group_id: string, lastMessage: Message) {
   };
 }
 
+export function removeGroup(group_id: string) {
+  return {
+    type: GroupsActionTypes.removeGroup,
+    payload: {
+      group_id,
+    },
+  };
+}
+
 export function updateGroup(group_id: string, group: Group) {
   return {
     type: GroupsActionTypes.updateGroup,

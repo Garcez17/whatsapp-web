@@ -38,7 +38,11 @@ import {
 } from '../../styles/components/content/Messages/styles';
 import { Contact } from '../../store/modules/contacts/types';
 import { Group } from '../../store/modules/groups/types';
-import { updateGroupLastMessage } from '../../store/modules/groups/actions';
+import {
+  removeGroup,
+  setCurrentGroup,
+  updateGroupLastMessage,
+} from '../../store/modules/groups/actions';
 
 export function Messages() {
   const messagesEndRef = useRef(null);
@@ -99,6 +103,11 @@ export function Messages() {
       });
     }
 
+    socket.on('kicked_notification', res => {
+      dispatch(removeGroup(res.roomId));
+      dispatch(setCurrentGroup(null));
+    });
+
     socket.on('updated_messages', data => {
       const lastMessage = data.updatedMessages.slice(-1)[0];
 
@@ -109,13 +118,20 @@ export function Messages() {
   }, [socket, roomId]);
 
   const handleExitGroup = () => {
-    socket.emit('kick_user', {
-      roomId: currentGroup.idChatRoom,
-      userId: user._id,
-      adminId: currentGroup.idAdmin,
-      userSockedId: user.socket_id,
-      exit: true,
-    });
+    socket.emit(
+      'kick_user',
+      {
+        roomId: currentGroup.idChatRoom,
+        userId: user._id,
+        adminId: currentGroup.idAdmin,
+        userSockedId: user.socket_id,
+        exit: true,
+      },
+      res => {
+        dispatch(removeGroup(res.roomId));
+        dispatch(setCurrentGroup(null));
+      },
+    );
     handleCloseModal();
   };
 

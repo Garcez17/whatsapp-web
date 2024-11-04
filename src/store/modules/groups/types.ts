@@ -7,6 +7,7 @@ export enum GroupsActionTypes {
   updateGroupNotifications = 'UPDATE_GROUP_NOTIFICATIONS',
   updateGroupLastMessage = 'UPDATE_GROUP_LAST_MESSAGE',
   updateGroup = 'UPDATE_GROUP',
+  removeGroup = 'REMOVE_GROUP',
 }
 
 export type Group = {

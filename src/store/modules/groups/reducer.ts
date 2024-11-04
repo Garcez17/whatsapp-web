@@ -30,6 +30,17 @@ export const groups: Reducer<GroupsState> = (state = INITAL_STATE, action) => {
 
         break;
       }
+      case GroupsActionTypes.removeGroup: {
+        const { group_id } = action.payload;
+
+        const filteredGroups = draft.groups.filter(
+          group => group.idChatRoom !== group_id,
+        );
+
+        draft.groups = filteredGroups;
+
+        break;
+      }
 
       case GroupsActionTypes.setCurrentGroupChat: {
         const { group } = action.payload;
