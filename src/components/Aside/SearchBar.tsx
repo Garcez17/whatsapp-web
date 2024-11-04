@@ -2,16 +2,22 @@ import Select from 'react-select';
 import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { IoArrowBackSharp } from 'react-icons/io5';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Container } from '../../styles/components/aside/searchbar/styles';
 import { socket } from '../../service/api';
 import { UserState } from '../../store/modules/user/types';
 import { State } from '../../store/modules/rootReducer';
+import { setRoomId } from '../../store/modules/chat/actions';
+import {
+  addGroup,
+  updateGroupLastMessage,
+} from '../../store/modules/groups/actions';
 
 export function SearchBar() {
   const [options, setOptions] = useState([]);
   const [option, setOption] = useState(null);
   const { user } = useSelector<State, UserState>(state => state.user);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     socket.emit('get_all_groups', res => {
@@ -32,11 +38,20 @@ export function SearchBar() {
   };
 
   const handleJoinGroup = () => {
-    socket.emit('join_room', {
-      idChatRoom: option.value,
-      userId: user._id,
-      userSockedId: user.socket_id,
-    });
+    socket.emit(
+      'join_room',
+      {
+        idChatRoom: option.value,
+        userId: user._id,
+        userSockedId: user.socket_id,
+      },
+      res => {
+        dispatch(setRoomId(res.roomId));
+        dispatch(addGroup(res.room));
+        if (res.lastMessage)
+          dispatch(updateGroupLastMessage(res.roomId, res.lastMessage));
+      },
+    );
     handleCloseModal();
   };
 
