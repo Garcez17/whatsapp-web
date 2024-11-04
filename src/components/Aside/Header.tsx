@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable react/button-has-type */
 import Image from 'next/image';
 import { BsThreeDotsVertical, BsFillChatLeftDotsFill } from 'react-icons/bs';
 import { IoArrowBackSharp } from 'react-icons/io5';
@@ -122,7 +124,6 @@ export function Header() {
                       border: 0,
                     }),
                   }}
-                  inputRef={ref}
                   onChange={val => onChange(val.map(c => c.value))}
                 />
               )}
