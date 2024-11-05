@@ -28,6 +28,14 @@ export default function Chat({ user }: ChatProps) {
     socket.emit('online', user.email, data => {
       dispatch(loginUser(data));
     });
+
+    socket.on('idle_check', res => {
+      socket.emit('kick_user', {
+        roomId: res.roomId,
+        userId: res.userId,
+        adminId: res.adminId,
+      });
+    });
   }, [dispatch, user.email]);
 
   return (

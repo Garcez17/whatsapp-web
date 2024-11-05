@@ -107,6 +107,10 @@ export function Messages() {
       dispatch(removeGroup(res.roomId));
       dispatch(setCurrentGroup(null));
     });
+    socket.on('banned_notification', res => {
+      dispatch(removeGroup(res.roomId));
+      dispatch(setCurrentGroup(null));
+    });
 
     socket.on('updated_messages', data => {
       const lastMessage = data.updatedMessages.slice(-1)[0];

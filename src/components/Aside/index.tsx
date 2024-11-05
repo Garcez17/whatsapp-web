@@ -36,9 +36,9 @@ export function Aside() {
       dispatch(setCurrentGroup(room));
     });
     socket.on('user_banned_notification', res => {
-      const { kickedUser, room, exit } = res;
+      const { bannedUser, room, exit } = res;
 
-      alert(`${kickedUser?.name} foi banido do grupo ${room?.name}`);
+      alert(`${bannedUser?.name} foi banido do grupo ${room?.name}`);
 
       dispatch(addGroup(room));
       dispatch(setCurrentGroup(room));

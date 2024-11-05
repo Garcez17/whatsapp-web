@@ -20,12 +20,12 @@ export function SearchBar() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    socket.emit('get_all_groups', res => {
+    socket.emit('get_all_groups', { user_id: user?._id }, res => {
       setOptions(
         res.map(group => ({ value: group.idChatRoom, label: group.name })),
       );
     });
-  }, []);
+  }, [user]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = (res: any) => {
